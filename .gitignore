@@ -1,0 +1,24 @@
+/*
+
+# editors
+!/.vscode
+
+# git
+!/.gitignore
+
+# makefile
+!/makefile
+
+# config
+!/.eslintrc.yml
+!/tsconfig.json
+
+# node modules
+!/package.json
+!/package-lock.json
+
+# sources
+!/src
+
+# builded
+!/lib
