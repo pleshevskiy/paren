@@ -1,30 +1,38 @@
 import { Renderer } from "./types.mjs";
-import { AnyNode, Node, TextNode } from "./node.mjs";
 import { isBool, isNil, Nullable } from "./lang.mjs";
+import { AnyNode, Elem, Frag, TextNode } from "./nodes.mjs";
 
 export class StrRenderer implements Renderer<string> {
-  async render(node: Node): Promise<string> {
-    return encodeNode(node);
+  async render(node: Elem | Promise<Elem>): Promise<string> {
+    return encodeNode(await node);
   }
 }
 
-function encodeAnyNode(node: AnyNode): string {
-  return node instanceof TextNode ? encodeTextNode(node) : encodeNode(node);
+async function encodeAnyNode(node: AnyNode): Promise<string> {
+  const syncNode = await node;
+  return syncNode instanceof TextNode
+    ? encodeTextNode(syncNode)
+    : encodeNode(syncNode);
 }
 
 function encodeTextNode(node: TextNode): string {
-  return node.text;
+  return String(node);
 }
 
-function encodeNode(node: Node): string {
-  return encodeHtml(
-    node.tagName,
-    node.attrs,
-    node.children?.map(encodeAnyNode)
-  );
+async function encodeNode(node: Elem | Frag): Promise<string> {
+  const encodedChildren = isNil(node.children)
+    ? undefined
+    : await Promise.all(node.children.map(encodeAnyNode));
+  return node instanceof Elem
+    ? encodeHtmlElement(node.tagName, node.attrs, encodedChildren)
+    : encodeHtmlFragment(encodedChildren);
 }
 
-function encodeHtml(
+function encodeHtmlFragment(children?: string[]): string {
+  return children?.join("") ?? "";
+}
+
+function encodeHtmlElement(
   tagName: string,
   attrs?: Record<string, unknown>,
   children?: string[]
@@ -34,7 +42,7 @@ function encodeHtml(
   return `${open}${children.join("")}</${tagName}>`;
 }
 
-function encodeAttrs(attrs?: Record<string, unknown>): string {
+function encodeAttrs(attrs?: Record<string, unknown>): Nullable<string> {
   if (!attrs) return "";
 
   return Object.entries(attrs)
