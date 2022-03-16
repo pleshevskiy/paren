@@ -6,4 +6,4 @@ ts-w:
 	npx tsc-watch
 
 clean:
-	rm -rf target
+	rm -rf lib

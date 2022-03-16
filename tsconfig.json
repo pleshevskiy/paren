@@ -5,6 +5,7 @@
     "module": "ESNext",
     "lib": ["dom", "esNext"],
     "moduleResolution": "node",
+    "declaration": true,
     "rootDir": "src",
     "forceConsistentCasingInFileNames": true,
     "suppressImplicitAnyIndexErrors": true,
