@@ -1,4 +1,7 @@
 
+ts:
+	npx tsc
+
 ts-w:
 	npx tsc-watch
 
