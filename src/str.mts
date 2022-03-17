@@ -8,9 +8,11 @@ export class StrRenderer implements Renderer<string> {
   }
 }
 
-async function encodeAnyNode(node: AnyNode): Promise<string> {
+async function encodeAnyNode(node: AnyNode): Promise<Nullable<string>> {
   const syncNode = await node;
-  return syncNode instanceof TextNode
+  return !syncNode
+    ? null
+    : syncNode instanceof TextNode
     ? encodeTextNode(syncNode)
     : encodeNode(syncNode);
 }
@@ -22,7 +24,9 @@ function encodeTextNode(node: TextNode): string {
 async function encodeNode(node: Elem | Frag): Promise<string> {
   const encodedChildren = isNil(node.children)
     ? undefined
-    : await Promise.all(node.children.map(encodeAnyNode));
+    : await Promise.all(node.children.map(encodeAnyNode)).then((children) =>
+        children.filter((c): c is string => Boolean(c))
+      );
   return node instanceof Elem
     ? encodeHtmlElement(node.tagName, node.attrs, encodedChildren)
     : encodeHtmlFragment(encodedChildren);

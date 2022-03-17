@@ -1,12 +1,12 @@
-import { isNil, Nilable } from "./lang.mjs";
+import { isNil, Nil, Nilable } from "./lang.mjs";
 
 export type AnyNode = AnySyncNode | AnyAsyncNode;
 export type AnyAsyncNode = Promise<AnySyncNode>;
-export type AnySyncNode = TextNode | Elem | Frag;
+export type AnySyncNode = TextNode | Elem | Frag | Nil | false;
 
 export class TextNode extends String {}
 
-export function F(children: AnyNode[]): Frag {
+export function F(...children: AnyNode[]): Frag {
   return new Frag().withChildren(children);
 }
 
@@ -30,11 +30,6 @@ export class Frag {
     this.addChild(new TextNode(text));
   }
 
-  maybeWithChildren(nodes?: Nilable<AnyNode[]>): this {
-    if (isNil(nodes)) return this;
-    return this.withChildren(nodes);
-  }
-
   withChildren(nodes: AnyNode[]): this {
     nodes.forEach((n) => this.addChild(n));
     return this;
@@ -54,9 +49,9 @@ export class Frag {
 export function E(
   tagName: string,
   attrs: ElemAttrs,
-  children?: Nilable<AnyNode[]>
+  ...children: AnyNode[]
 ): Elem {
-  return new Elem(tagName).withAttrs(attrs).maybeWithChildren(children);
+  return new Elem(tagName).withAttrs(attrs).withChildren(children);
 }
 
 export type ElemAttrs = Record<string, unknown>;

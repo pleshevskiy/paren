@@ -1,22 +1,21 @@
-import { Nilable } from "./lang.js";
+import { Nil, Nilable } from "./lang.js";
 export declare type AnyNode = AnySyncNode | AnyAsyncNode;
 export declare type AnyAsyncNode = Promise<AnySyncNode>;
-export declare type AnySyncNode = TextNode | Elem | Frag;
+export declare type AnySyncNode = TextNode | Elem | Frag | Nil | false;
 export declare class TextNode extends String {
 }
-export declare function F(children: AnyNode[]): Frag;
+export declare function F(...children: AnyNode[]): Frag;
 export declare class Frag {
     #private;
     constructor();
     get children(): Nilable<AnyNode[]>;
     withText(text: string): this;
     addText(text: string): void;
-    maybeWithChildren(nodes?: Nilable<AnyNode[]>): this;
     withChildren(nodes: AnyNode[]): this;
     withChild(node: AnyNode): this;
     addChild(node: AnyNode): void;
 }
-export declare function E(tagName: string, attrs: ElemAttrs, children?: Nilable<AnyNode[]>): Elem;
+export declare function E(tagName: string, attrs: ElemAttrs, ...children: AnyNode[]): Elem;
 export declare type ElemAttrs = Record<string, unknown>;
 export declare class Elem extends Frag {
     #private;
