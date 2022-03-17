@@ -1,4 +1,4 @@
-import { Nilable } from "./lang.mjs";
+import { Nilable } from "./lang.js";
 export declare type AnyNode = AnySyncNode | AnyAsyncNode;
 export declare type AnyAsyncNode = Promise<AnySyncNode>;
 export declare type AnySyncNode = TextNode | Elem | Frag;

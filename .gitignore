@@ -19,6 +19,7 @@
 
 # sources
 !/src
+!/scripts
 
 # builded
 !/lib

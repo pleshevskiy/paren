@@ -17,6 +17,6 @@
     "noImplicitAny": true
   },
   "include": [
-    "src/**/*"
+    "src/**/*.mts"
   ],
 }
