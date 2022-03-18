@@ -1,8 +1,6 @@
 import { isNil, Nil, Nilable } from "./lang.mjs";
 
-export type AnyNode = AnySyncNode | AnyAsyncNode;
-export type AnyAsyncNode = Promise<AnySyncNode>;
-export type AnySyncNode = TextNode | Elem | Frag | Nil | false;
+export type AnyNode = TextNode | Elem | Frag | Nil | false;
 
 export class TextNode extends String {}
 
@@ -90,7 +88,7 @@ export class Elem extends Frag {
     this.#attrs[name] = value;
   }
 
-  addChild(node: AnySyncNode): void {
+  addChild(node: AnyNode): void {
     if (this.#isSelfClosed)
       throw new Error("You cannot add child to self closed element");
     super.addChild(node);

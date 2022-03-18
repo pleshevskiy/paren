@@ -3,30 +3,27 @@ import { isBool, isNil, Nullable } from "./lang.mjs";
 import { AnyNode, Elem, Frag, TextNode } from "./nodes.mjs";
 
 export class StrRenderer implements Renderer<string> {
-  async render(node: Elem | Promise<Elem>): Promise<string> {
-    return encodeNode(await node);
+  render(node: Elem): string {
+    return encodeNode(node);
   }
 }
 
-async function encodeAnyNode(node: AnyNode): Promise<Nullable<string>> {
-  const syncNode = await node;
-  return !syncNode
+function encodeAnyNode(node: AnyNode): Nullable<string> {
+  return !node
     ? null
-    : syncNode instanceof TextNode
-    ? encodeTextNode(syncNode)
-    : encodeNode(syncNode);
+    : node instanceof TextNode
+    ? encodeTextNode(node)
+    : encodeNode(node);
 }
 
 function encodeTextNode(node: TextNode): string {
   return String(node);
 }
 
-async function encodeNode(node: Elem | Frag): Promise<string> {
+function encodeNode(node: Elem | Frag): string {
   const encodedChildren = isNil(node.children)
     ? undefined
-    : await Promise.all(node.children.map(encodeAnyNode)).then((children) =>
-        children.filter((c): c is string => Boolean(c))
-      );
+    : node.children.map(encodeAnyNode).filter((c): c is string => Boolean(c));
   return node instanceof Elem
     ? encodeHtmlElement(node.tagName, node.attrs, encodedChildren)
     : encodeHtmlFragment(encodedChildren);
