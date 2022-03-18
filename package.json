@@ -3,10 +3,10 @@
   "description": "",
   "version": "0.0.1",
   "main": "lib/index.mjs",
+  "module": "lib/index.mjs",
   "types": "lib/index.d.ts",
   "directories": {
-    "lib": "lib",
-    "src": "src"
+    "lib": "lib"
   },
   "devDependencies": {
     "@types/node": "^17.0.21",
