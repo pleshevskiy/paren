@@ -3,13 +3,12 @@
 # editors
 !/.vscode
 
-# git
-!/.gitignore
-
 # makefile
 !/makefile
 
 # config
+!/.gitignore
+!/.eslintignore
 !/.eslintrc.yml
 !/tsconfig.json
 
