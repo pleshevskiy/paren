@@ -10,8 +10,7 @@ export declare class Frag {
   get children(): Nilable<AnyNode[]>;
   withText(text: string): this;
   addText(text: string): void;
-  withChildren(nodes: AnyNode[]): this;
-  withChild(node: AnyNode): this;
+  withChildren(...nodes: AnyNode[]): this;
   addChild(node: AnyNode): void;
 }
 export declare function E(

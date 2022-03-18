@@ -5,7 +5,7 @@ export type AnyNode = TextNode | Elem | Frag | Nil | false;
 export class TextNode extends String {}
 
 export function F(...children: AnyNode[]): Frag {
-  return new Frag().withChildren(children);
+  return new Frag().withChildren(...children);
 }
 
 export class Frag {
@@ -28,13 +28,8 @@ export class Frag {
     this.addChild(new TextNode(text));
   }
 
-  withChildren(nodes: AnyNode[]): this {
+  withChildren(...nodes: AnyNode[]): this {
     nodes.forEach((n) => this.addChild(n));
-    return this;
-  }
-
-  withChild(node: AnyNode): this {
-    this.addChild(node);
     return this;
   }
 
@@ -49,7 +44,7 @@ export function E(
   attrs: ElemAttrs,
   ...children: AnyNode[]
 ): Elem {
-  return new Elem(tagName).withAttrs(attrs).withChildren(children);
+  return new Elem(tagName).withAttrs(attrs).withChildren(...children);
 }
 
 export type ElemAttrs = Record<string, unknown>;
