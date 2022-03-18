@@ -1,8 +1,8 @@
 
-ts:
+build:
 	npx tsc && make fix-decl
 
-ts-w:
+watch:
 	npx tsc-watch --onSuccess "make fix-decl"
 
 fix-decl:
