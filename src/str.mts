@@ -1,5 +1,5 @@
 import { Renderer } from "./types.mjs";
-import { isBool, isNil, Nilable, Nullable } from "./lang.mjs";
+import { isBool, isNil, isStr, Nilable, Nullable } from "./lang.mjs";
 import { AnyNode, Elem, ElemAttrs, Frag, TextNode } from "./nodes.mjs";
 
 export class StrRenderer implements Renderer<string> {
@@ -9,11 +9,7 @@ export class StrRenderer implements Renderer<string> {
 }
 
 function encodeAnyNode(node: AnyNode): Nullable<string> {
-  return !node
-    ? null
-    : node instanceof TextNode
-    ? encodeTextNode(node)
-    : encodeNode(node);
+  return !node ? null : isStr(node) ? encodeTextNode(node) : encodeNode(node);
 }
 
 function encodeTextNode(node: TextNode): string {

@@ -1,12 +1,30 @@
-import { isNil, Nil, Nilable } from "./lang.mjs";
+import { intoArr, isNil, Nil, Nilable } from "./lang.mjs";
 
-export type AnyNode = TextNode | Elem | Frag | Nil | false;
+export function Et(tagName: string, ...texts: string[]): Elem {
+  return new Elem(tagName).withText(texts);
+}
 
-export class TextNode extends String {}
+export function Ea(
+  tagName: string,
+  attrs?: ElemAttrs,
+  children?: AnyNode | AnyNode[]
+): Elem {
+  const el = new Elem(tagName);
+  if (attrs) el.addAttrs(attrs);
+  if (children) el.addChildren(children);
+  return el;
+}
+
+export function E(tagName: string, children: AnyNode | AnyNode[]): Elem {
+  return new Elem(tagName).withChildren(children);
+}
 
 export function F(...children: AnyNode[]): Frag {
-  return new Frag().withChildren(...children);
+  return new Frag().withChildren(children);
 }
+
+export type AnyNode = TextNode | Elem | Frag | Nil | false;
+export type TextNode = string;
 
 export class Frag {
   #children: Nilable<AnyNode[]>;
@@ -19,32 +37,32 @@ export class Frag {
     return this.#children;
   }
 
-  withText(text: string): this {
-    this.addText(text);
+  withText(texts: TextNode | TextNode[]): this {
+    this.addText(texts);
     return this;
   }
 
-  addText(text: string): void {
-    this.addChild(new TextNode(text));
+  addText(texts: TextNode | TextNode[]): void {
+    this.addChildren(
+      intoArr(texts)
+        .map((t) => t.trim())
+        .join(" ")
+    );
   }
 
-  withChildren(...nodes: AnyNode[]): this {
-    nodes.forEach((n) => this.addChild(n));
+  withChildren(nodes: AnyNode | AnyNode[]): this {
+    this.addChildren(nodes);
     return this;
+  }
+
+  addChildren(nodes: AnyNode | AnyNode[]): void {
+    intoArr(nodes).forEach((n) => this.addChild(n));
   }
 
   addChild(node: AnyNode): void {
     if (isNil(this.#children)) this.#children = [];
     this.#children.push(node);
   }
-}
-
-export function E(
-  tagName: string,
-  attrs: ElemAttrs,
-  ...children: AnyNode[]
-): Elem {
-  return new Elem(tagName).withAttrs(attrs).withChildren(...children);
 }
 
 export type ElemAttrs = Record<string, unknown>;
@@ -69,14 +87,13 @@ export class Elem extends Frag {
     return this.#attrs;
   }
 
-  withAttrs(attrs: Record<string, unknown>): Elem {
-    Object.entries(attrs).forEach(([key, value]) => this.addAttr(key, value));
+  withAttrs(attrs: ElemAttrs): Elem {
+    this.addAttrs(attrs);
     return this;
   }
 
-  withAttr(name: string, value: unknown): Elem {
-    this.addAttr(name, value);
-    return this;
+  addAttrs(attrs: ElemAttrs): void {
+    Object.entries(attrs).forEach(([key, value]) => this.addAttr(key, value));
   }
 
   addAttr(name: string, value: unknown): void {
