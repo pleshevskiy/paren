@@ -8,17 +8,9 @@
 
 # config
 !/.gitignore
-!/.eslintignore
-!/.eslintrc.yml
-!/tsconfig.json
+!/deno.json
+!/import_map.json
 
-# node modules
-!/package.json
-!/package-lock.json
+!/core
+!/ren
 
-# sources
-!/src
-!/scripts
-
-# builded
-!/lib
