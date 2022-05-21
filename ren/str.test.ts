@@ -121,7 +121,7 @@ Deno.test({
 });
 
 Deno.test({
-  name: "should force render doctype if root nod is not html",
+  name: "should force render doctype if root node is not html",
   fn: () => {
     const layout = E("body", [], []);
 
