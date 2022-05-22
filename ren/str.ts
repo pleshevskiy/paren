@@ -14,27 +14,37 @@ import { Renderer } from "./types.ts";
 interface StrRendererOpts {
   doctype?: string;
   forceRenderDoctype?: boolean;
+  wrapNode?: (node: AnyNode) => AnyNode;
 }
 
 export class StrRenderer implements Renderer<string> {
-  #opts: StrRendererOpts;
+  #doctype: string;
+  #forceRenderDoctype: boolean;
+  #wrapNode: (node: AnyNode) => AnyNode;
 
   constructor(opts?: StrRendererOpts) {
-    this.#opts = opts ?? {};
+    this.#doctype = opts?.doctype ?? "html";
+    this.#forceRenderDoctype = opts?.forceRenderDoctype ?? false;
+    this.#wrapNode = opts?.wrapNode ?? identity;
   }
 
   render(node: AnyNode): string {
-    const shouldRenderDoctype = this.#opts.forceRenderDoctype ||
-      (isElem(node) && node.tagName === "html");
+    const wrappedNode = this.#wrapNode(node);
+    const shouldRenderDoctype = this.#forceRenderDoctype ||
+      (isElem(wrappedNode) && wrappedNode.tagName === "html");
     return concat([
-      shouldRenderDoctype && encodeDoctype(this.#opts.doctype),
-      encodeAnyNode(node),
+      shouldRenderDoctype && encodeDoctype(this.#doctype),
+      encodeAnyNode(wrappedNode),
     ]);
   }
 }
 
-function encodeDoctype(value?: string): string {
-  return `<!doctype ${value ?? "html"}>`;
+function identity<T>(val: T): T {
+  return val;
+}
+
+function encodeDoctype(value: string): string {
+  return `<!doctype ${value}>`;
 }
 
 function encodeAnyNode(node: AnyNode): string {

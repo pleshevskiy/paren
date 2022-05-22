@@ -1,5 +1,6 @@
 import { assertEquals } from "testing/asserts.ts";
-import { E, F, TextNode } from "../core/node.ts";
+import { TextNode } from "../core/node.ts";
+import { E, F } from "./node.ts";
 
 import { StrRenderer } from "./str.ts";
 
@@ -129,5 +130,17 @@ Deno.test({
     const res = ren.render(layout);
 
     assertEquals(res, "<!doctype html><body></body>");
+  },
+});
+
+Deno.test({
+  name: "should wrap node",
+  fn: () => {
+    const layout = E("body", [], []);
+
+    const ren = new StrRenderer({ wrapNode: (node) => E("html", [], [node]) });
+    const res = ren.render(layout);
+
+    assertEquals(res, "<!doctype html><html><body></body></html>");
   },
 });
