@@ -1,3 +1,5 @@
+export * from "../core/node.ts";
+
 import {
   AnyNode,
   Attrs,
