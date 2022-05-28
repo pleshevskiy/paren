@@ -1,12 +1,8 @@
 
-build:
-	npx tsc && make fix-decl
+test-w:
+	deno test --watch
 
-watch:
-	npx tsc-watch --onSuccess "make fix-decl"
+test:
+	deno test
 
-fix-decl:
-	./scripts/fix_decl.sh
 
-clean:
-	rm -rf lib
