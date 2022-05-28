@@ -1,6 +1,7 @@
 import { Nilable } from "./utils.ts";
 
 export type Attrs = Record<string, string>;
+export type AttrEntry = [key: string, value: string];
 export type AnyNode = Fragment | FragmentNode;
 
 export function isTextNode(val: unknown): val is TextNode {
