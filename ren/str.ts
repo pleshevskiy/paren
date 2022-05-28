@@ -2,6 +2,7 @@ import {
   AnyNode,
   AttrEntry,
   Attrs,
+  AttrVal,
   Elem,
   Fragment,
   isElem,
@@ -103,7 +104,10 @@ function encodeAttrs(
   );
 }
 
-function encodeAttr(key: string, value: string): string {
+function encodeAttr(key: string, value: AttrVal): string {
+  if (typeof value === "boolean") {
+    return value ? key : "";
+  }
   return `${key}="${value}"`;
 }
 

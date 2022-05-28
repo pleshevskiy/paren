@@ -184,3 +184,33 @@ Deno.test({
     );
   },
 });
+
+Deno.test({
+  name: "should filter attr",
+  fn: () => {
+    const layout = E("input", { type: "number", disabled: false });
+
+    const ren = new StrRenderer();
+    const res = ren.render(layout);
+
+    assertEquals(
+      res,
+      '<input type="number">',
+    );
+  },
+});
+
+Deno.test({
+  name: "should render boolean attr",
+  fn: () => {
+    const layout = E("input", { type: "number", disabled: true });
+
+    const ren = new StrRenderer();
+    const res = ren.render(layout);
+
+    assertEquals(
+      res,
+      '<input type="number" disabled>',
+    );
+  },
+});
