@@ -144,3 +144,43 @@ Deno.test({
     assertEquals(res, "<!doctype html><html><body></body></html>");
   },
 });
+
+Deno.test({
+  name: "should change attr key",
+  fn: () => {
+    const layout = E("a", {
+      target: "_blank",
+      href: "/hello/world",
+      rel: "nofollow noopener",
+    }, "hello world");
+
+    const ren = new StrRenderer({
+      onVisitAttr: ([key, val]) => [`data-${key}`, val],
+    });
+    const res = ren.render(layout);
+
+    assertEquals(
+      res,
+      '<a data-target="_blank" data-href="/hello/world" data-rel="nofollow noopener">hello world</a>',
+    );
+  },
+});
+
+Deno.test({
+  name: "should change attr value",
+  fn: () => {
+    const layout = E("a", {
+      href: "/hello/world",
+    }, "hello world");
+
+    const ren = new StrRenderer({
+      onVisitAttr: ([key, val]) => [key, "/eng" + val],
+    });
+    const res = ren.render(layout);
+
+    assertEquals(
+      res,
+      '<a href="/eng/hello/world">hello world</a>',
+    );
+  },
+});
