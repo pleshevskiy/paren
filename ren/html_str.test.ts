@@ -2,14 +2,14 @@ import { assertEquals } from "testing/asserts.ts";
 import { TextNode } from "../core/node.ts";
 import { E, F } from "./node.ts";
 
-import { StrRenderer } from "./str.ts";
+import { HtmlStrRenderer } from "./html_str.ts";
 
 Deno.test({
   name: "should render text node",
   fn: () => {
     const tn = new TextNode("hello world");
 
-    const ren = new StrRenderer();
+    const ren = new HtmlStrRenderer();
     const res = ren.render(tn);
 
     assertEquals(res, "hello world");
@@ -21,7 +21,7 @@ Deno.test({
   fn: () => {
     const el = E("p", [], "hello world");
 
-    const ren = new StrRenderer();
+    const ren = new HtmlStrRenderer();
     const res = ren.render(el);
 
     assertEquals(res, "<p>hello world</p>");
@@ -33,7 +33,7 @@ Deno.test({
   fn: () => {
     const frag = F([]);
 
-    const ren = new StrRenderer();
+    const ren = new HtmlStrRenderer();
     const res = ren.render(frag);
 
     assertEquals(res, "");
@@ -49,7 +49,7 @@ Deno.test({
       E("p", [], "world"),
     ]);
 
-    const ren = new StrRenderer();
+    const ren = new HtmlStrRenderer();
     const res = ren.render(frag);
 
     assertEquals(res, 'hello world<div class="hello"></div><p>world</p>');
@@ -65,7 +65,7 @@ Deno.test({
       ]),
     ]);
 
-    const ren = new StrRenderer();
+    const ren = new HtmlStrRenderer();
     const res = ren.render(layout);
 
     assertEquals(res, '<body><div id="root"><p>hello world</p></div></body>');
@@ -81,7 +81,7 @@ Deno.test({
       ]),
     ]);
 
-    const ren = new StrRenderer();
+    const ren = new HtmlStrRenderer();
     const res = ren.render(layout);
 
     assertEquals(
@@ -96,7 +96,7 @@ Deno.test({
   fn: () => {
     const layout = E("html", []);
 
-    const ren = new StrRenderer();
+    const ren = new HtmlStrRenderer();
     const res = ren.render(layout);
 
     assertEquals(res, "<!doctype html><html></html>");
@@ -108,7 +108,7 @@ Deno.test({
   fn: () => {
     const layout = E("html", []);
 
-    const ren = new StrRenderer({
+    const ren = new HtmlStrRenderer({
       doctype:
         'html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"',
     });
@@ -126,7 +126,7 @@ Deno.test({
   fn: () => {
     const layout = E("body", [], []);
 
-    const ren = new StrRenderer({ forceRenderDoctype: true });
+    const ren = new HtmlStrRenderer({ forceRenderDoctype: true });
     const res = ren.render(layout);
 
     assertEquals(res, "<!doctype html><body></body>");
@@ -138,7 +138,9 @@ Deno.test({
   fn: () => {
     const layout = E("body", [], []);
 
-    const ren = new StrRenderer({ wrapNode: (node) => E("html", [], [node]) });
+    const ren = new HtmlStrRenderer({
+      wrapNode: (node) => E("html", [], [node]),
+    });
     const res = ren.render(layout);
 
     assertEquals(res, "<!doctype html><html><body></body></html>");
@@ -154,7 +156,7 @@ Deno.test({
       rel: "nofollow noopener",
     }, "hello world");
 
-    const ren = new StrRenderer({
+    const ren = new HtmlStrRenderer({
       onVisitAttr: ([key, val]) => [`data-${key}`, val],
     });
     const res = ren.render(layout);
@@ -173,7 +175,7 @@ Deno.test({
       href: "/hello/world",
     }, "hello world");
 
-    const ren = new StrRenderer({
+    const ren = new HtmlStrRenderer({
       onVisitAttr: ([key, val]) => [key, "/eng" + val],
     });
     const res = ren.render(layout);
@@ -190,7 +192,7 @@ Deno.test({
   fn: () => {
     const layout = E("input", { type: "number", disabled: false });
 
-    const ren = new StrRenderer();
+    const ren = new HtmlStrRenderer();
     const res = ren.render(layout);
 
     assertEquals(
@@ -205,7 +207,7 @@ Deno.test({
   fn: () => {
     const layout = E("input", { type: "number", disabled: true });
 
-    const ren = new StrRenderer();
+    const ren = new HtmlStrRenderer();
     const res = ren.render(layout);
 
     assertEquals(

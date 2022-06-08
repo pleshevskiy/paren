@@ -13,14 +13,14 @@ import {
 import { concat, join } from "../core/utils.ts";
 import { Renderer } from "./types.ts";
 
-interface StrRendererOpts {
+interface HtmlStrRendererOpts {
   doctype?: string;
   forceRenderDoctype?: boolean;
   wrapNode?: (node: AnyNode) => AnyNode;
   onVisitAttr?: (entry: AttrEntry, params: OnVisitAttrParams) => AttrEntry;
 }
 
-interface StrRendererHooks {
+interface HtmlStrRendererHooks {
   onVisitAttr: (entry: AttrEntry, params: OnVisitAttrParams) => AttrEntry;
 }
 
@@ -29,13 +29,13 @@ export interface OnVisitAttrParams {
   readonly attrs: Attrs;
 }
 
-export class StrRenderer implements Renderer<string> {
+export class HtmlStrRenderer implements Renderer<string> {
   #doctype: string;
   #forceRenderDoctype: boolean;
   #wrapNode: (node: AnyNode) => AnyNode;
-  #hooks: StrRendererHooks;
+  #hooks: HtmlStrRendererHooks;
 
-  constructor(opts?: StrRendererOpts) {
+  constructor(opts?: HtmlStrRendererOpts) {
     this.#doctype = opts?.doctype ?? "html";
     this.#forceRenderDoctype = opts?.forceRenderDoctype ?? false;
     this.#wrapNode = opts?.wrapNode ?? identity;
@@ -63,7 +63,7 @@ function encodeDoctype(value: string): string {
   return `<!doctype ${value}>`;
 }
 
-function encodeAnyNode(node: AnyNode, hooks: StrRendererHooks): string {
+function encodeAnyNode(node: AnyNode, hooks: HtmlStrRendererHooks): string {
   return isTextNode(node)
     ? encodeTextNode(node)
     : isFragment(node)
@@ -75,13 +75,16 @@ function encodeTextNode(node: TextNode): string {
   return node.innerText;
 }
 
-function encodeHtmlFragment(node: Fragment, hooks: StrRendererHooks): string {
+function encodeHtmlFragment(
+  node: Fragment,
+  hooks: HtmlStrRendererHooks,
+): string {
   return concat(node.children.map((ch) => encodeAnyNode(ch, hooks)));
 }
 
 function encodeHtmlElement(
   { tagName, attrs, children }: Elem,
-  hooks: StrRendererHooks,
+  hooks: HtmlStrRendererHooks,
 ): string {
   const open = `<${join(" ", [tagName, encodeAttrs(tagName, attrs, hooks)])}>`;
   if (isSelfClosedTagName(tagName)) return open;
@@ -93,7 +96,7 @@ function encodeHtmlElement(
 function encodeAttrs(
   tagName: string,
   attrs: Attrs,
-  hooks: StrRendererHooks,
+  hooks: HtmlStrRendererHooks,
 ): string {
   return join(
     " ",
