@@ -2,7 +2,7 @@ import { AnyNode, Elem, Fragment, TextNode } from "../core/node.ts";
 import { isNil, Nilable } from "../core/utils.ts";
 import { Parser } from "./types.ts";
 
-const RE_EMPTY_LINE = /^\s*$/;
+const RE_EMPTY_LINE = /^[ \t]*\r?\n/;
 
 const RE_OPEN_ATX_HEADING = /^\s{0,3}(#{1,6})(\s|$)/;
 const RE_CLOSE_ATX_HEADING = /(^|\s+)#*\s*$/;
@@ -166,19 +166,20 @@ function parseParagraph(
     kind: AstKind.Paragraph,
     content: [],
   };
-  ast.content.push(paragraph);
 
   let paragraphInlineContent = "";
-  while (!RE_EMPTY_LINE.test(readStr)) {
+  while (readStr && !RE_EMPTY_LINE.test(readStr)) {
     const listMatch = RE_LIST_ITEM.exec(readStr);
     if (!isNil(listMatch)) break;
-    paragraphInlineContent += readStr.includes("\n")
+    const newPart = readStr.includes("\n")
       ? readStr.slice(0, readStr.indexOf("\n") + 1)
       : readStr;
-    readStr = readStr.slice(paragraphInlineContent.length);
+    paragraphInlineContent += newPart;
+    readStr = readStr.slice(newPart.length);
   }
 
   if (paragraphInlineContent.length) {
+    ast.content.push(paragraph);
     parseInlineContent(paragraph, paragraphInlineContent);
   }
 

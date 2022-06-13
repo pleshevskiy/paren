@@ -106,11 +106,42 @@ Deno.test({
   fn: () => {
     const par = new MarkdownParser();
 
-    const input = `\
+    assertEquals(
+      ren.render(par.parse(`\
 hello
-world`;
+world`)),
+      "<p>hello world</p>",
+    );
+  },
+});
 
-    assertEquals(ren.render(par.parse(input)), "<p>hello world</p>");
+Deno.test({
+  name: "should parse many big paragraphs",
+  fn: () => {
+    const par = new MarkdownParser();
+
+    assertEquals(
+      ren.render(par.parse(`\
+hello
+world`)),
+      "<p>hello world</p>",
+    );
+
+    assertEquals(
+      ren.render(par.parse(`\
+Lorem Ipsum is simply dummy text of the printing
+and typesetting industry.
+
+Lorem Ipsum has been the industry's standard dummy
+text ever since the 1500s, when an unknown printer
+took a galley of type and scrambled it to make a
+type specimen book.
+
+It has survived not only five centuries, but also
+the leap into electronic typesetting, remaining
+essentially unchanged.`)),
+      "<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p><p>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p><p>It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>",
+    );
   },
 });
 
@@ -255,6 +286,30 @@ Deno.test({
 - hello
 - world`)),
       "<ul><li>hello</li><li>world</li></ul>",
+    );
+  },
+});
+
+// Doc
+
+Deno.test({
+  name: "should parse all document",
+  only: true,
+  fn: () => {
+    const par = new MarkdownParser();
+
+    const content = `\
+# What is Lorem Ipsum?
+
+Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+
+- Sed in orci non lorem luctus dictum ac vel justo.
+- Nunc non leo vel dolor fringilla imperdiet.
+- Proin finibus ipsum quis molestie porta.`;
+
+    assertEquals(
+      ren.render(par.parse(content)),
+      "<h1>What is Lorem Ipsum?</h1><p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p><ul><li>Sed in orci non lorem luctus dictum ac vel justo.</li><li>Nunc non leo vel dolor fringilla imperdiet.</li><li>Proin finibus ipsum quis molestie porta.</li></ul>",
     );
   },
 });
