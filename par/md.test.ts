@@ -294,7 +294,6 @@ Deno.test({
 
 Deno.test({
   name: "should parse all document",
-  only: true,
   fn: () => {
     const par = new MarkdownParser();
 
