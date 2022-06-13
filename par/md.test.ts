@@ -293,22 +293,18 @@ Deno.test({
 // Doc
 
 Deno.test({
-  name: "should parse all document",
+  name: "should parse all document from file",
   fn: () => {
     const par = new MarkdownParser();
 
-    const content = `\
-# What is Lorem Ipsum?
-
-Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-
-- Sed in orci non lorem luctus dictum ac vel justo.
-- Nunc non leo vel dolor fringilla imperdiet.
-- Proin finibus ipsum quis molestie porta.`;
+    assertEquals(
+      ren.render(par.parse(Deno.readTextFileSync("test_data/doc_01.md"))),
+      "<h1>What is Lorem Ipsum?</h1><p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p><ul><li>Sed in orci non lorem luctus dictum ac vel justo.</li><li>Nunc non leo vel dolor fringilla imperdiet.</li><li>Proin finibus ipsum quis molestie porta.</li></ul>",
+    );
 
     assertEquals(
-      ren.render(par.parse(content)),
-      "<h1>What is Lorem Ipsum?</h1><p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p><ul><li>Sed in orci non lorem luctus dictum ac vel justo.</li><li>Nunc non leo vel dolor fringilla imperdiet.</li><li>Proin finibus ipsum quis molestie porta.</li></ul>",
+      ren.render(par.parse(Deno.readTextFileSync("test_data/doc_02.md"))),
+      "<h1>What is Lorem Ipsum?</h1><ul><li>Sed in orci non lorem luctus dictum ac vel justo.</li><li>Nunc non leo vel dolor fringilla imperdiet.</li><li>Proin finibus ipsum quis molestie porta.</li></ul>",
     );
   },
 });

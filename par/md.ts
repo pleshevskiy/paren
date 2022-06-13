@@ -2,12 +2,12 @@ import { AnyNode, Elem, Fragment, TextNode } from "../core/node.ts";
 import { isNil, Nilable } from "../core/utils.ts";
 import { Parser } from "./types.ts";
 
-const RE_EMPTY_LINE = /^[ \t]*\r?\n/;
+const RE_EMPTY_LINE = /^[ ]*\r?\n/;
 
-const RE_OPEN_ATX_HEADING = /^\s{0,3}(#{1,6})(\s|$)/;
-const RE_CLOSE_ATX_HEADING = /(^|\s+)#*\s*$/;
+const RE_OPEN_ATX_HEADING = /^[ ]{0,3}(#{1,6})([ ]|$)/;
+const RE_CLOSE_ATX_HEADING = /(^|[ ]+)#*[ ]*$/;
 
-const RE_LIST_ITEM = /^\s{0,3}([-+*])(\s|$)/;
+const RE_LIST_ITEM = /^[ ]{0,3}([-+*])([ ]|$)/;
 
 // TODO: make better regex for destination
 const RE_LINK = /\[([\s\S]*?)]\((?:([^\s]*)|<(.+?)>)(?: ('|")(.+?)\4)?\)/;
