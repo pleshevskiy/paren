@@ -19,24 +19,34 @@ Deno.test({
 Deno.test({
   name: "should render element",
   fn: () => {
-    const el = E("p", [], "hello world");
-
     const ren = new HtmlStrRenderer();
-    const res = ren.render(el);
 
-    assertEquals(res, "<p>hello world</p>");
+    assertEquals(ren.render(E("p", [])), "<p></p>");
+    assertEquals(ren.render(E("p", [], "hello world")), "<p>hello world</p>");
+    assertEquals(
+      ren.render(E("p", [], ["hello", "world"])),
+      "<p>hello world</p>",
+    );
+    assertEquals(
+      ren.render(E("p", [], [E("span", [], "hello"), E("span", [], "world")])),
+      "<p><span>hello</span><span>world</span></p>",
+    );
+    assertEquals(
+      ren.render(E("p", [], ["hello", E("span", [], "world")])),
+      "<p>hello <span>world</span></p>",
+    );
+    assertEquals(
+      ren.render(E("p", [], [E("span", [], "hello"), "world"])),
+      "<p><span>hello</span> world</p>",
+    );
   },
 });
 
 Deno.test({
   name: "should render empty fragment as empty string",
   fn: () => {
-    const frag = F([]);
-
     const ren = new HtmlStrRenderer();
-    const res = ren.render(frag);
-
-    assertEquals(res, "");
+    assertEquals(ren.render(F([])), "");
   },
 });
 
@@ -52,7 +62,7 @@ Deno.test({
     const ren = new HtmlStrRenderer();
     const res = ren.render(frag);
 
-    assertEquals(res, 'hello world<div class="hello"></div><p>world</p>');
+    assertEquals(res, 'hello world <div class="hello"></div><p>world</p>');
   },
 });
 

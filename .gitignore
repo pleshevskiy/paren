@@ -9,5 +9,11 @@
 !/import_map.json
 
 !/core
+/core/*
 !/ren
+/ren/*
+!/par
+/par/*
+
+!/**/*.ts
 

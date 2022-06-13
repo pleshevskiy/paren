@@ -79,7 +79,9 @@ function encodeHtmlFragment(
   node: Fragment,
   hooks: HtmlStrRendererHooks,
 ): string {
-  return concat(node.children.map((ch) => encodeAnyNode(ch, hooks)));
+  return concatEncodedNodes(
+    node.children.map((ch) => encodeAnyNode(ch, hooks)),
+  );
 }
 
 function encodeHtmlElement(
@@ -90,7 +92,11 @@ function encodeHtmlElement(
   if (isSelfClosedTagName(tagName)) return open;
 
   const encodedChildren = children.map((ch) => encodeAnyNode(ch, hooks));
-  return `${open}${concat(encodedChildren)}</${tagName}>`;
+  return `${open}${concatEncodedNodes(encodedChildren)}</${tagName}>`;
+}
+
+function concatEncodedNodes(encodedChildren: string[]): string {
+  return join(" ", encodedChildren).replace(/>\s+?</g, "><");
 }
 
 function encodeAttrs(
