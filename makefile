@@ -3,6 +3,6 @@ test-w:
 	deno test --allow-read --watch
 
 test:
-	deno test
+	deno test --allow-read
 
 
