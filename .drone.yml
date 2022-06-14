@@ -13,5 +13,4 @@ steps:
   - name: tests
     image: denoland/deno:alpine-1.22.3
     commands:
-      - cd /app
       - deno test --allow-read
